@@ -1,5 +1,5 @@
 <!-- BEGIN_TF_DOCS -->
-# Fibre-Channel Pool Example
+# VLAN Policy Example
 
 To run this example you need to execute:
 
@@ -13,21 +13,27 @@ Note that this example will create resources. Resources can be destroyed with `t
 
 ### main.tf
 ```hcl
-module "wwpn_pool" {
-  source  = "scotttyso/pools-fc/intersight"
+module "vlan_policy" {
+  source  = "terraform-cisco-modules/policies-vlan/intersight"
   version = ">= 1.0.1"
 
-  assignment_order = "sequential"
-  description      = "Demo WWPN Pool"
-  id_blocks = [
-    {
-      from = "0:00:00:25:B5:00:00:00"
-      size = 1000
-    }
-  ]
+  description  = "default VLAN Policy."
   name         = "default"
   organization = "default"
-  pool_purpose = "WWPN"
+  vlan_list = [
+    {
+      auto_allow_on_uplinks = true
+      multicast_policy      = "default"
+      name                  = "default"
+      native_vlan           = true
+      vlan_list             = "1"
+    },
+    {
+      multicast_policy = "default"
+      name             = "other"
+      vlan_list        = "2-99"
+    }
+  ]
 }
 
 ```
