@@ -35,7 +35,6 @@ module "vlan_policy" {
     }
   ]
 }
-
 ```
 
 ### variables.tf
