@@ -1,7 +1,3 @@
-terraform {
-  experiments = [module_variable_optional_attrs]
-}
-
 #____________________________________________________________
 #
 # UCS VLAN Policy Variables Section.
@@ -52,10 +48,10 @@ variable "vlan_list" {
     * vlan_list: (required) -  This can either be one vlan like "10" or a list of VLANs: "1,10,20-30".
   EOT
   type = list(object({
-    auto_allow_on_uplinks = optional(bool)
+    auto_allow_on_uplinks = optional(bool, true)
     multicast_policy      = string
-    name                  = optional(string)
-    native_vlan           = optional(bool)
+    name                  = optional(string, "")
+    native_vlan           = optional(bool, false)
     vlan_list             = string
   }))
 }

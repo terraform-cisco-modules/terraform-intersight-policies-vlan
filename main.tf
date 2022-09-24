@@ -74,11 +74,11 @@ resource "intersight_fabric_eth_network_policy" "vlan_policy" {
 locals {
   vlans_loop_1 = {
     for k, v in var.vlan_list : k => {
-      auto_allow_on_uplinks = v.auto_allow_on_uplinks != null ? v.auto_allow_on_uplinks : true
+      auto_allow_on_uplinks = v.auto_allow_on_uplinks
       multicast_policy      = v.multicast_policy
-      name                  = v.name != null ? v.name : ""
+      name                  = v.name
       name_prefix           = length(regexall("(,|-)", jsonencode(v.vlan_list))) > 0 ? true : false
-      native_vlan           = v.native_vlan != null ? v.native_vlan : false
+      native_vlan           = v.native_vlan
       vlan_list = flatten(
         [for s in compact(length(regexall("-", v.vlan_list)) > 0 ? tolist(split(",", v.vlan_list)
           ) : length(regexall(",", v.vlan_list)) > 0 ? tolist(split(",", v.vlan_list)) : [v.vlan_list]
