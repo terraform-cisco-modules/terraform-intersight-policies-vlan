@@ -5,7 +5,7 @@
 
 output "moid" {
   description = "VLAN Policy Managed Object ID (moid)."
-  value       = intersight_fabric_eth_network_policy.vlan_policy.moid
+  value       = intersight_fabric_eth_network_policy.vlan.moid
 }
 
 #____________________________________________________________

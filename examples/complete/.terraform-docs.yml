@@ -20,14 +20,14 @@ content: |-
   {{ include "./main.tf" }}
   ```
 
+  ### provider.tf
+  ```hcl
+  {{ include "./provider.tf" }}
+  ```
+
   ### variables.tf
   ```hcl
   {{ include "./variables.tf" }}
-  ```
-
-  ### versions.tf
-  ```hcl
-  {{ include "./versions.tf" }}
   ```
 
 output:

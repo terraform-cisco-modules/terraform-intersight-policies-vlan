@@ -16,14 +16,14 @@ content: |-
   {{ include "examples/complete/main.tf" }}
   ```
 
+  ### provider.tf
+  ```hcl
+  {{ include "examples/complete/provider.tf" }}
+  ```
+
   ### variables.tf
   ```hcl
   {{ include "examples/complete/variables.tf" }}
-  ```
-
-  ### versions.tf
-  ```hcl
-  {{ include "examples/complete/versions.tf" }}
   ```
 
   ## Environment Variables

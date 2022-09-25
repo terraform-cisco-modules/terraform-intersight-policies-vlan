@@ -5,10 +5,5 @@ terraform {
       version = ">=1.0.32"
     }
   }
-}
-
-provider "intersight" {
-  apikey    = var.apikey
-  endpoint  = var.endpoint
-  secretkey = var.secretkey
+  required_version = ">=1.3.0"
 }

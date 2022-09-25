@@ -1,4 +1,4 @@
-module "vlan_policy" {
+module "vlan" {
   source  = "terraform-cisco-modules/policies-vlan/intersight"
   version = ">= 1.0.1"
 
