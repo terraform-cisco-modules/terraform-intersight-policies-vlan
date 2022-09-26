@@ -32,7 +32,7 @@ data "intersight_fabric_switch_profile" "profiles" {
 
 data "intersight_fabric_multicast_policy" "multicast" {
   for_each = {
-    for v in local.multicast_policies : v => v if length(regexall("[[:xdigit:]]{24}", v)) > 0
+    for v in local.multicast_policies : v => v if length(regexall("[[:xdigit:]]{24}", v)) == 0
   }
   name = each.value
 }
@@ -46,7 +46,7 @@ data "intersight_fabric_multicast_policy" "multicast" {
 resource "intersight_fabric_eth_network_policy" "vlan" {
   depends_on = [
     data.intersight_organization_organization.org_moid,
-    data.intersight_fabric_multicast_policy.multicast_policies,
+    data.intersight_fabric_multicast_policy.multicast,
     data.intersight_fabric_switch_profile.profiles
   ]
   description = var.description != "" ? var.description : "${var.name} VLAN Policy."
@@ -129,8 +129,8 @@ locals {
 
 resource "intersight_fabric_vlan" "vlans" {
   depends_on = [
-    data.intersight_fabric_multicast_policy.multicast_policies,
-    intersight_fabric_eth_network_policy.vlan_policy
+    data.intersight_fabric_multicast_policy.multicast,
+    intersight_fabric_eth_network_policy.vlan
   ]
   for_each              = local.vlan_list
   auto_allow_on_uplinks = each.value.auto_allow_on_uplinks
@@ -148,7 +148,7 @@ resource "intersight_fabric_vlan" "vlans" {
   )
   vlan_id = each.value.vlan_id
   eth_network_policy {
-    moid = intersight_fabric_eth_network_policy.vlan_policy.moid
+    moid = intersight_fabric_eth_network_policy.vlan.moid
   }
   multicast_policy {
     moid = length(

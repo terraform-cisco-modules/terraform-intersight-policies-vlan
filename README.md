@@ -16,7 +16,7 @@ module "vlan" {
   description  = "default VLAN Policy."
   name         = "default"
   organization = "default"
-  vlan_list = [
+  vlans = [
     {
       auto_allow_on_uplinks = true
       multicast_policy      = "default"
