@@ -7,7 +7,7 @@
 data "intersight_organization_organization" "org_moid" {
   for_each = {
     for v in [var.organization] : v => v if length(
-      regexall("[[:xdigit:]]{24}", var.organization)
+      regexall("[[:xdigit:]]{24}", v)
     ) == 0
   }
   name = each.value
@@ -20,7 +20,7 @@ data "intersight_organization_organization" "org_moid" {
 #____________________________________________________________
 
 data "intersight_fabric_switch_profile" "profiles" {
-  for_each = { for v in var.profiles : v => v if length(regexall("[[:xdigit:]]{24}")) > 0 }
+  for_each = { for v in var.profiles : v => v if length(regexall("[[:xdigit:]]{24}", v)) == 0 }
   name     = each.value
 }
 
@@ -31,8 +31,10 @@ data "intersight_fabric_switch_profile" "profiles" {
 #____________________________________________________________
 
 data "intersight_fabric_multicast_policy" "multicast" {
-  for_each = { for v in local.multicast_policies : v => v }
-  name     = each.value
+  for_each = {
+    for v in local.multicast_policies : v => v if length(regexall("[[:xdigit:]]{24}", v)) > 0
+  }
+  name = each.value
 }
 
 #__________________________________________________________________
@@ -60,7 +62,9 @@ resource "intersight_fabric_eth_network_policy" "vlan" {
   dynamic "profiles" {
     for_each = { for v in var.profiles : v => v }
     content {
-      moid        = data.intersight_fabric_switch_profile.profiles[profiles.value].results[0].moid
+      moid = length(
+        regexall("[[:xdigit:]]{24}", profiles.value)
+      ) > 0 ? profiles.value : data.intersight_fabric_switch_profile.profiles[profiles.value].results[0].moid
       object_type = "fabric.SwitchProfile"
     }
   }
@@ -82,7 +86,7 @@ resource "intersight_fabric_eth_network_policy" "vlan" {
 
 locals {
   vlans_loop_1 = {
-    for k, v in var.vlan_list : k => {
+    for k, v in var.vlans : k => {
       auto_allow_on_uplinks = v.auto_allow_on_uplinks
       multicast_policy      = v.multicast_policy
       name                  = v.name
@@ -147,6 +151,10 @@ resource "intersight_fabric_vlan" "vlans" {
     moid = intersight_fabric_eth_network_policy.vlan_policy.moid
   }
   multicast_policy {
-    moid = data.intersight_fabric_multicast_policy.multicast[each.value.multicast_policy].results[0].moid
+    moid = length(
+      regexall("[[:xdigit:]]{24}", each.value.multicast_policy)
+      ) > 0 ? each.value.multicast_policy : data.intersight_fabric_multicast_policy.multicast[
+      each.value.multicast_policy].results[0
+    ].moid
   }
 }

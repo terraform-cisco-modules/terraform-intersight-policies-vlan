@@ -38,7 +38,7 @@ variable "tags" {
 # VSAN Policy -> Add VSAN Variables Section.
 #____________________________________________________________
 
-variable "vlan_list" {
+variable "vlans" {
   default     = []
   description = <<-EOT
     * auto_allow_on_uplinks: (optional - default is true) - Used to determine whether this VLAN will be allowed on all uplink ports and PCs in this 
