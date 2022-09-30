@@ -88,7 +88,7 @@ export TF_VAR_secretkey=`cat <secret-key-file-location>`
 ### Windows
 ```bash
 $env:TF_VAR_apikey="<your-api-key>"
-$env:TF_VAR_secretkey="<secret-key-file-location>""
+$env:TF_VAR_secretkey="<secret-key-file-location>"
 ```
 
 
