@@ -25,9 +25,10 @@ module "main" {
   }
   vlans = [
     {
-      multicast_policy = var.name
-      name             = "other"
-      vlan_list        = "2-5"
+      auto_allow_on_uplinks = false
+      multicast_policy      = var.name
+      name                  = "other"
+      vlan_list             = "2-5"
     }
   ]
 }
