@@ -1,51 +1,41 @@
-terraform {
-  required_providers {
-    test = {
-      source = "terraform.io/builtin/test"
-    }
+data "intersight_organization_organization" "org_moid" {
+  name = "terratest"
+}
 
-    intersight = {
-      source  = "CiscoDevNet/intersight"
-      version = ">=1.0.32"
-    }
-  }
+module "multicast" {
+  source  = "terraform-cisco-modules/policies-multicast/intersight"
+  version = ">= 1.0.2"
+
+  name         = var.name
+  organization = "terratest"
 }
 
 module "main" {
-  source           = "../.."
-  assignment_order = "sequential"
-  description      = "Demo WWPN Pool"
-  id_blocks = [
+  source       = "../.."
+  description  = "${var.name} VLAN Policy."
+  moids        = true
+  name         = var.name
+  organization = data.intersight_organization_organization.org_moid.results[0].moid
+  policies = {
+    multicast = {
+      "${var.name}" = {
+        moid = module.multicast.moid
+      }
+    }
+  }
+  vlans = [
     {
-      from = "0:00:00:25:B5:00:00:00"
-      size = 1000
+      multicast_policy = var.name
+      name             = "other"
+      vlan_list        = "2-5"
     }
   ]
-  name         = "default"
-  organization = "default"
-  pool_purpose = "WWPN"
 }
 
-data "intersight_fcpool_pool" "wwpn_pool" {
-  depends_on = [
-    module.main
-  ]
-  name = "default"
+output "multicast" {
+  value = module.multicast.moid
 }
 
-resource "test_assertions" "wwpn_pool" {
-  component = "wwpn_pool"
-
-  # equal "description" {
-  #   description = "description"
-  #   got         = data.intersight_fcpool_pool.wwpn_pool.description
-  #   want        = "Demo WWPN Pool"
-  # }
-  # 
-  # equal "name" {
-  #   description = "name"
-  #   got         = data.intersight_fcpool_pool.wwpn_pool.name
-  #   want        = "default"
-  # }
-
+output "vlan" {
+  value = module.main.vlans["2"]
 }
