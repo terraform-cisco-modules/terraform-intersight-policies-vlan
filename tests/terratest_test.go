@@ -83,9 +83,9 @@ func TestFull(t *testing.T) {
 	"IsNative": false,
 	"MulticastPolicy": {
 	  "ClassId": "mo.MoRef",
-	  "Moid": "{{ .multicast_policy }}",
+	  "Moid": "{{ .multicast }}",
 	  "ObjectType": "fabric.MulticastPolicy",
-	  "link": "https://www.intersight.com/api/v1/fabric/MulticastPolicies/{{ .multicast_policy }}"
+	  "link": "https://www.intersight.com/api/v1/fabric/MulticastPolicies/{{ .multicast }}"
 	},
 	"Name": "other-vl0002",
 	"VlanId": 2
