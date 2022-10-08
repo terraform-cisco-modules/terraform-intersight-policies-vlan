@@ -87,8 +87,7 @@ func TestFull(t *testing.T) {
 	  "ObjectType": "fabric.MulticastPolicy",
 	  "link": "https://www.intersight.com/api/v1/fabric/MulticastPolicies/{{ .multicast }}"
 	},
-	"Name": "other-vl0002",
-	"VlanId": 2
+	"Name": "other-vl0002"
 }
 `
 	// Validate that what is in the Intersight API matches the expected
