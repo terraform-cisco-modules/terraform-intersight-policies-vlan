@@ -1,9 +1,17 @@
 <!-- BEGIN_TF_DOCS -->
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Developed by: Cisco](https://img.shields.io/badge/Developed%20by-Cisco-blue)](https://developer.cisco.com)
+[![Tests](https://github.com/terraform-cisco-modules/terraform-intersight-policies-vlan/actions/workflows/terratest.yml/badge.svg)](https://github.com/terraform-cisco-modules/terraform-intersight-policies-vlan/actions/workflows/terratest.yml)
+
 # Terraform Intersight Policies - VLAN
 Manages Intersight VLAN Policies
 
 Location in GUI:
 `Policies` » `Create Policy` » `VLAN`
+
+## Easy IMM
+
+[*Easy IMM - Comprehensive Example*](https://github.com/terraform-cisco-modules/easy-imm-comprehensive-example) - A comprehensive example for policies, pools, and profiles.
 
 ## Example
 
@@ -48,7 +56,7 @@ terraform {
 provider "intersight" {
   apikey    = var.apikey
   endpoint  = var.endpoint
-  secretkey = var.secretkey
+  secretkey = fileexists(var.secretkeyfile) ? file(var.secretkeyfile) : var.secretkey
 }
 ```
 
@@ -67,7 +75,15 @@ variable "endpoint" {
 }
 
 variable "secretkey" {
-  description = "Intersight Secret Key."
+  default     = ""
+  description = "Intersight Secret Key Content."
+  sensitive   = true
+  type        = string
+}
+
+variable "secretkeyfile" {
+  default     = "blah.txt"
+  description = "Intersight Secret Key File Location."
   sensitive   = true
   type        = string
 }
@@ -76,21 +92,14 @@ variable "secretkey" {
 ## Environment Variables
 
 ### Terraform Cloud/Enterprise - Workspace Variables
-- Add variable apikey with value of [your-api-key]
-- Add variable secretkey with value of [your-secret-file-content]
+- Add variable apikey with the value of [your-api-key]
+- Add variable secretkey with the value of [your-secret-file-content]
 
-### Linux
+### Linux and Windows
 ```bash
 export TF_VAR_apikey="<your-api-key>"
-export TF_VAR_secretkey=`cat <secret-key-file-location>`
+export TF_VAR_secretkeyfile="<secret-key-file-location>"
 ```
-
-### Windows
-```bash
-$env:TF_VAR_apikey="<your-api-key>"
-$env:TF_VAR_secretkey="<secret-key-file-location>"
-```
-
 
 ## Requirements
 
@@ -102,14 +111,11 @@ $env:TF_VAR_secretkey="<secret-key-file-location>"
 
 | Name | Version |
 |------|---------|
-| <a name="provider_intersight"></a> [intersight](#provider\_intersight) | 1.0.32 |
+| <a name="provider_intersight"></a> [intersight](#provider\_intersight) | >=1.0.32 |
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_apikey"></a> [apikey](#input\_apikey) | Intersight API Key. | `string` | n/a | yes |
-| <a name="input_endpoint"></a> [endpoint](#input\_endpoint) | Intersight URL. | `string` | `"https://intersight.com"` | no |
-| <a name="input_secretkey"></a> [secretkey](#input\_secretkey) | Intersight Secret Key. | `string` | n/a | yes |
 | <a name="input_description"></a> [description](#input\_description) | Description for the Policy. | `string` | `""` | no |
 | <a name="input_domain_profiles"></a> [domain\_profiles](#input\_domain\_profiles) | Map for Moid based Domain Profile Sources. | `any` | `{}` | no |
 | <a name="input_moids"></a> [moids](#input\_moids) | Flag to Determine if pools and policies should be data sources or if they already defined as a moid. | `bool` | `false` | no |
@@ -124,7 +130,7 @@ $env:TF_VAR_secretkey="<secret-key-file-location>"
 | Name | Description |
 |------|-------------|
 | <a name="output_moid"></a> [moid](#output\_moid) | VLAN Policy Managed Object ID (moid). |
-| <a name="output_vlan_moids"></a> [vlan\_moids](#output\_vlan\_moids) | VLAN Policy - Add VLANs Managed Object ID (moid). |
+| <a name="output_vlans"></a> [vlans](#output\_vlans) | VLAN Policy - Add VLANs Managed Object ID (moid). |
 ## Resources
 
 | Name | Type |

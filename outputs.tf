@@ -13,7 +13,7 @@ output "moid" {
 # Collect the moid of the VLAN Policy - Add VLANs as Outputs
 #____________________________________________________________
 
-output "vlan_moids" {
+output "vlans" {
   description = "VLAN Policy - Add VLANs Managed Object ID (moid)."
   value       = { for v in sort(keys(intersight_fabric_vlan.vlans)) : v => intersight_fabric_vlan.vlans[v].moid }
 }
